@@ -16,7 +16,7 @@ pipeline {
         stage('Git Checkout') {
             steps {
                 git(
-                    url: 'https://github.com/Gow9117/devops-snake-game.git',
+                    url: 'https://github.com/Anandhakrishnan2025/devops-snake-game.git',
                     branch: 'main'
                 )
             }
