@@ -40,7 +40,7 @@ resource "aws_internet_gateway" "anand_eks_igw" {
 ############################
 # Route Table
 ############################
-resource "anand_eks_route_table" "anand_eks_rt" {
+resource "aws_route_table" "anand_eks_rt" {
   vpc_id = aws_vpc.anand_eks_vpc.id
 
   route {
