@@ -65,7 +65,7 @@ resource "aws_iam_role_policy_attachment" "node_registry_policy" {
 ############################
 # EKS Cluster
 ############################
-resource "aws_eks_cluster" "anand-eks-cluster" {
+resource "anand_eks_cluster" "anand-eks-cluster" {
   name     = "anand-cluster"
   role_arn = aws_iam_role.anand_eks_cluster_role.arn
 
@@ -82,8 +82,8 @@ resource "aws_eks_cluster" "anand-eks-cluster" {
 ############################
 # EKS Node Group
 ############################
-resource "aws_eks_node_group" "anand" {
-  cluster_name    = aws_eks_cluster.anand.name
+resource "anand_eks_node_group" "anand" {
+  cluster_name    = anand_eks_cluster.anand.name
   node_group_name = "anand-node-group"
   node_role_arn   = aws_iam_role.anand_eks_node_role.arn
 
@@ -99,7 +99,7 @@ resource "aws_eks_node_group" "anand" {
 
   remote_access {
     ec2_ssh_key               = var.ssh_key_name
-    source_security_group_ids = [aws_security_group.gowtham_node_sg.id]
+    source_security_group_ids = [aws_security_group.anand_eks_node_sg.id]
   }
 
   depends_on = [

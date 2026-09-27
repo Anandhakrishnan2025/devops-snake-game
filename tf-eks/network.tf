@@ -40,16 +40,16 @@ resource "aws_internet_gateway" "anand_eks_igw" {
 ############################
 # Route Table
 ############################
-resource "aws_route_table" "eks_rt" {
-  vpc_id = aws_vpc.eks_vpc.id
+resource "anand_eks_route_table" "anand_eks_rt" {
+  vpc_id = aws_vpc.anand_eks_vpc.id
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.eks_igw.id
+    gateway_id = aws_internet_gateway.anand_eks_igw.id
   }
 
   tags = {
-    Name = "eks-route-table"
+    Name = "anand-eks-route-table"
   }
 }
 
