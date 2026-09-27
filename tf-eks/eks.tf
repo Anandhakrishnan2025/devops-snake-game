@@ -21,7 +21,7 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "cluster_policy" {
-  role       = aws_iam_role.eks_cluster_role.name
+  role       =  aws_iam_role.anand_eks_cluster_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
@@ -83,7 +83,7 @@ resource "aws_eks_cluster" "anand-eks-cluster" {
 # EKS Node Group
 ############################
 resource "aws_eks_node_group" "anand" {
-  cluster_name    = anand_eks_cluster.anand.name
+  cluster_name    = aws_eks_cluster.anand-eks-cluster.name
   node_group_name = "anand-node-group"
   node_role_arn   = aws_iam_role.anand_eks_node_role.arn
 
