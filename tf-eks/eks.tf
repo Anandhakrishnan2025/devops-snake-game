@@ -65,7 +65,7 @@ resource "aws_iam_role_policy_attachment" "node_registry_policy" {
 ############################
 # EKS Cluster
 ############################
-resource "anand_eks_cluster" "anand-eks-cluster" {
+resource "aws_eks_cluster" "anand-eks-cluster" {
   name     = "anand-cluster"
   role_arn = aws_iam_role.anand_eks_cluster_role.arn
 
@@ -82,7 +82,7 @@ resource "anand_eks_cluster" "anand-eks-cluster" {
 ############################
 # EKS Node Group
 ############################
-resource "anand_eks_node_group" "anand" {
+resource "aws_eks_node_group" "anand" {
   cluster_name    = anand_eks_cluster.anand.name
   node_group_name = "anand-node-group"
   node_role_arn   = aws_iam_role.anand_eks_node_role.arn
