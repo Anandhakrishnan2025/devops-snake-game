@@ -32,16 +32,16 @@ pipeline {
 
         stage('Plan') {
             steps {
-                sh 'pwd; cd tf-eks/EKS/; terraform init'
-                sh 'pwd; cd tf-eks/EKS/; terraform plan -out tfplan'
-                sh 'pwd; cd tf-eks/EKS/; terraform show -no-color tfplan > tfplan.txt'
+                sh 'pwd; cd tf-eks/; terraform init'
+                sh 'pwd; cd tf-eks/; terraform plan -out tfplan'
+                sh 'pwd; cd tf-eks/; terraform show -no-color tfplan > tfplan.txt'
             }
         }
 
         stage('Approval') {
             steps {
                 script {
-                    def plan = readFile 'tf-eks/EKS/tfplan.txt'
+                    def plan = readFile 'tf-eks/tfplan.txt'
 
                     input message: "Do you want to proceed with the Terraform action?",
                     parameters: [
@@ -68,11 +68,11 @@ pipeline {
 
                     if (params.terraformAction == 'apply') {
 
-                        sh 'pwd; cd tf-eks/EKS/; terraform apply -input=false tfplan'
+                        sh 'pwd; cd tf-eks/; terraform apply -input=false tfplan'
 
                     } else if (params.terraformAction == 'destroy') {
 
-                        sh 'pwd; cd tf-eks/EKS/; terraform destroy -auto-approve'
+                        sh 'pwd; cd tf-eks/; terraform destroy -auto-approve'
 
                     }
                 }
