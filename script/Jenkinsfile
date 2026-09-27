@@ -1,6 +1,11 @@
-pipeline{
-    parameters{
-        choice(name: 'terraformAction',choices: ['apply','destroy'],description: 'Choose your terraform action')
+pipeline {
+
+    parameters {
+        choice(
+            name: 'terraformAction',
+            choices: ['apply', 'destroy'],
+            description: 'Choose your terraform action'
+        )
     }
 
     environment {
@@ -10,55 +15,68 @@ pipeline{
 
     agent any
 
+    stages {
 
-
-    stages{
-        stage('Checkout'){
-            steps{
-                script{
-                    dir("tf-eks"){
-                        git url: 'https://github.com/Anandhakrishnan2025/devops-snake-game.git',branch: 'tf-eks'
+        stage('Checkout') {
+            steps {
+                script {
+                    dir("tf-eks") {
+                        git(
+                            url: 'https://github.com/Anandhakrishnan2025/devops-snake-game.git',
+                            branch: 'tf-eks'
+                        )
                     }
                 }
             }
         }
 
-        stage('Plan'){
-            steps{
-                sh 'pwd; cd EKS/; terraform init'
-                sh 'pwd; cd EKS/; terraform plan -out tfplan'
-                sh 'pwd; cd EKS/; terraform show -no-color tfplan > tfplan.txt'
+        stage('Plan') {
+            steps {
+                sh 'pwd; cd tf-eks/EKS/; terraform init'
+                sh 'pwd; cd tf-eks/EKS/; terraform plan -out tfplan'
+                sh 'pwd; cd tf-eks/EKS/; terraform show -no-color tfplan > tfplan.txt'
             }
         }
 
-        stage('Approval'){
-            steps{
-                script{
-                    def plan = readFile 'EKS/tfplan.txt'
+        stage('Approval') {
+            steps {
+                script {
+                    def plan = readFile 'tf-eks/EKS/tfplan.txt'
+
                     input message: "Do you want to proceed with the Terraform action?",
-                    parameters: [text(name: 'Plan', description: 'Please review the plan', defaultValue: plan)]
+                    parameters: [
+                        text(
+                            name: 'Plan',
+                            description: 'Please review the plan',
+                            defaultValue: plan
+                        )
+                    ]
                 }
             }
         }
 
-        stage('Apply or Destroy'){
+        stage('Apply or Destroy') {
             when {
-                expression{
-                    return  params.terraformAction == 'apply' || params.terraformAction == 'destroy'
-                } 
+                expression {
+                    return params.terraformAction == 'apply' ||
+                           params.terraformAction == 'destroy'
+                }
             }
-            steps{
-                script{
-                    if (params.terraformAction == 'apply'){
-                        sh 'pwd; cd EKS/; terraform apply -input=false tfplan'
-                    }
-                    else if (params.terraformAction == 'destroy'){
-                        sh 'pwd; cd EKS/; terraform destroy -auto-approve'
+
+            steps {
+                script {
+
+                    if (params.terraformAction == 'apply') {
+
+                        sh 'pwd; cd tf-eks/EKS/; terraform apply -input=false tfplan'
+
+                    } else if (params.terraformAction == 'destroy') {
+
+                        sh 'pwd; cd tf-eks/EKS/; terraform destroy -auto-approve'
+
                     }
                 }
             }
         }
-
     }
-
 }
